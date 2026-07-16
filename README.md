@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# software-architecture73
 
-## Getting Started
+Веб-приложение курса по архитектуре программного обеспечения на Next.js и TypeScript.
 
-First, run the development server:
+Что внутри:
+
+- главная страница со списком глав и прогрессом
+- страницы уроков с нормальным рендером HTML-материалов
+- открытие изображений на весь экран в модалке
+- сохранение прогресса и отметок о прохождении в `localStorage`
+- поддержка PDF-материалов
+- тёмная и светлая темы
+- адаптивный интерфейс
+
+## Локальный запуск
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Открыть:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Продакшн-проверка
 
-## Learn More
+```bash
+npm run lint
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Деплой на Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Импортируйте репозиторий в Vercel.
+2. Framework Preset: `Next.js`
+3. Root Directory: `/`
+4. Build Command: `npm run build`
+5. Output: по умолчанию
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Дополнительные переменные окружения не нужны.
 
-## Deploy on Vercel
+## Структура
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/app` — маршруты и страницы
+- `src/components` — UI-компоненты
+- `src/lib/course.ts` — чтение и парсинг материалов курса
+- `data` — исходные уроки и PDF
+- `public/__course_media` — извлечённые изображения из уроков
