@@ -12,6 +12,8 @@ const customTitles: Record<string, string> = {
 };
 
 const THEORY_ROOT_CLASS = "theory-viewer";
+const THEORY_ROOT_MARKER = '<section class="theory-viewer big-theory lesson__theory">';
+const LARGE_LESSON_THRESHOLD = 20_000_000;
 const ROOT = () => path.resolve(process.cwd(), "data");
 const MEDIA_ROOT = () => path.resolve(process.cwd(), "public", "__course_media");
 
@@ -149,7 +151,20 @@ function replaceClassBlocks(
 
 function theoryRoot(source: string) {
   const roots = classBlocks(source, (classes) => classes.includes(THEORY_ROOT_CLASS));
-  return roots.sort((left, right) => right.html.length - left.html.length)[0]?.html ?? "";
+  const matched = roots.sort((left, right) => right.html.length - left.html.length)[0]?.html;
+
+  if (matched) {
+    return matched;
+  }
+
+  const markerIndex = source.indexOf(THEORY_ROOT_MARKER);
+
+  if (markerIndex < 0) {
+    return "";
+  }
+
+  const bodyEnd = source.indexOf("</body>", markerIndex);
+  return source.slice(markerIndex, bodyEnd > markerIndex ? bodyEnd : undefined);
 }
 
 function mediaSource(src: string) {
@@ -384,10 +399,39 @@ export function getLesson(file: string) {
 }
 
 export function getLessonContent(file: string) {
-  const rootHtml = theoryRoot(sourceFor(file));
+  const source = sourceFor(file);
+  const rootHtml = theoryRoot(source);
 
   if (!rootHtml) {
     return "";
+  }
+
+  if (source.length > LARGE_LESSON_THRESHOLD) {
+    return sanitizeContent(
+      removeClassBlocks(rootHtml, [
+        "block_type_quiz",
+        "block_type_action-button",
+        "block_type_dialog",
+        "block_type_video",
+        "video-player",
+        "video-placeholder",
+        "video-gif",
+        "chat",
+        "dialog",
+        "chat__body",
+        "chat__message",
+        "bubble_type_text",
+        "bubble_side_left",
+        "bubble_side_right",
+        "support-chat",
+        "vsc-controller",
+        "downloadable-image__button",
+        "downloadable-image",
+        "image-gallery",
+        "quiz-form",
+        "quiz__content",
+      ]),
+    );
   }
 
   return cleanLessonHtml(rootHtml);
