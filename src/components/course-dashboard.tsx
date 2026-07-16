@@ -66,10 +66,6 @@ export function CourseDashboard({ chapters }: { chapters: Chapter[] }) {
 
   return (
     <main className="page">
-      <div className="pageToolbar">
-        <ThemeToggle />
-      </div>
-
       <header className="hero">
         <div className="heroBody">
           <span className="eyebrow">Архитектура ПО</span>
@@ -80,28 +76,34 @@ export function CourseDashboard({ chapters }: { chapters: Chapter[] }) {
           </p>
         </div>
 
-        <div className="overall">
-          <div className="overallTop">
-            <strong>{progress}%</strong>
-            <span>пройдено</span>
+        <div className="heroAside">
+          <div className="heroAsideTop">
+            <span>Ваш прогресс</span>
+            <ThemeToggle compact />
           </div>
 
-          <div className="progress" aria-hidden="true">
-            <i style={{ width: `${progress}%` }} />
-          </div>
+          <div className="overall">
+            <div className="overallTop">
+              <strong>{progress}%</strong>
+              <span>пройдено</span>
+            </div>
 
-          <div className="overallMeta">
-            <span>
-              {completed} из {lessons.length} уроков
-            </span>
-            <span>{chapters.length} глав</span>
+            <div className="progress" aria-hidden="true">
+              <i style={{ width: `${progress}%` }} />
+            </div>
+
+            <div className="overallMeta">
+              <span>
+                {completed} из {lessons.length} уроков
+              </span>
+              <span>{chapters.length} глав</span>
+            </div>
           </div>
         </div>
       </header>
 
       <section className="chapters">
         <div className="sectionHeading">
-          <span>01</span>
           <h2>Список глав</h2>
         </div>
 
@@ -160,7 +162,7 @@ export function CourseDashboard({ chapters }: { chapters: Chapter[] }) {
   );
 }
 
-export function LessonTools({ lesson }: { lesson: Lesson }) {
+export function LessonTools({ lesson, pdfHref }: { lesson: Lesson; pdfHref?: string }) {
   const { done, toggle } = useProgress();
   const isDone = done.includes(lesson.id);
 
@@ -170,8 +172,8 @@ export function LessonTools({ lesson }: { lesson: Lesson }) {
         {isDone ? "Урок отмечен как пройденный" : "Отметить как пройденный"}
       </button>
 
-      {lesson.kind === "pdf" ? (
-        <a className="secondaryButton" href={`/api/content?file=${encodeURIComponent(lesson.file)}`} download>
+      {lesson.kind === "pdf" && pdfHref ? (
+        <a className="secondaryButton" href={pdfHref} download>
           Скачать PDF
         </a>
       ) : null}

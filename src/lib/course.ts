@@ -16,6 +16,7 @@ const THEORY_ROOT_MARKER = '<section class="theory-viewer big-theory lesson__the
 const LARGE_LESSON_THRESHOLD = 20_000_000;
 const ROOT = () => path.resolve(process.cwd(), "data");
 const MEDIA_ROOT = () => path.resolve(process.cwd(), "public", "__course_media");
+const DOCS_ROOT = () => path.resolve(process.cwd(), "public", "__course_docs");
 
 function normalize(value: string) {
   return value.replace(/\\/g, "/");
@@ -193,6 +194,29 @@ function mediaSource(src: string) {
   return `/__course_media/${filename}`;
 }
 
+function documentSource(file: string) {
+  if (!file.endsWith(".pdf") || file.includes("..")) {
+    return "";
+  }
+
+  const absolute = path.resolve(ROOT(), file);
+
+  if (!absolute.startsWith(ROOT()) || !fs.existsSync(absolute)) {
+    return "";
+  }
+
+  const hash = crypto.createHash("sha1").update(file).digest("hex");
+  const filename = `${hash}${path.extname(absolute).toLowerCase() || ".pdf"}`;
+  const target = path.join(DOCS_ROOT(), filename);
+
+  if (!fs.existsSync(target)) {
+    fs.mkdirSync(DOCS_ROOT(), { recursive: true });
+    fs.copyFileSync(absolute, target);
+  }
+
+  return `/__course_docs/${filename}`;
+}
+
 function firstImageTag(html: string) {
   const imageIndex = html.indexOf("<img");
 
@@ -354,6 +378,30 @@ function cleanLessonHtml(html: string) {
   );
 }
 
+function withoutLeadingLessonTitle(html: string, file: string) {
+  const heading = /<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(html);
+
+  if (!heading || heading.index > 5_000) {
+    return html;
+  }
+
+  const normalizeText = (value: string) =>
+    value
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&nbsp;/gi, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLocaleLowerCase("ru");
+
+  const expectedTitle = lessonTitle(path.basename(file));
+
+  if (normalizeText(heading[1]) !== normalizeText(expectedTitle)) {
+    return html;
+  }
+
+  return html.slice(0, heading.index) + html.slice(heading.index + heading[0].length);
+}
+
 export function getCourse(): Chapter[] {
   return fs
     .readdirSync(ROOT(), { withFileTypes: true })
@@ -376,6 +424,10 @@ export function getCourse(): Chapter[] {
             file: relative,
             kind: file.endsWith(".pdf") ? "pdf" : "html",
           };
+
+          if (lesson.kind === "pdf") {
+            documentSource(relative);
+          }
 
           grouped.set(section, [...(grouped.get(section) ?? []), lesson]);
         });
@@ -407,8 +459,9 @@ export function getLessonContent(file: string) {
   }
 
   if (source.length > LARGE_LESSON_THRESHOLD) {
-    return sanitizeContent(
-      removeClassBlocks(rootHtml, [
+    return withoutLeadingLessonTitle(
+      sanitizeContent(
+        removeClassBlocks(rootHtml, [
         "block_type_quiz",
         "block_type_action-button",
         "block_type_dialog",
@@ -430,9 +483,15 @@ export function getLessonContent(file: string) {
         "image-gallery",
         "quiz-form",
         "quiz__content",
-      ]),
+        ]),
+      ),
+      file,
     );
   }
 
-  return cleanLessonHtml(rootHtml);
+  return withoutLeadingLessonTitle(cleanLessonHtml(rootHtml), file);
+}
+
+export function getLessonDocumentUrl(file: string) {
+  return documentSource(file);
 }

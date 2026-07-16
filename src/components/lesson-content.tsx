@@ -5,6 +5,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type GalleryImage = { src: string; alt: string };
 
+function isDecorativeBanner(image: HTMLImageElement) {
+  const { naturalWidth, naturalHeight } = image;
+
+  return naturalWidth >= 600 && naturalHeight > 0 && naturalHeight <= 200 && naturalWidth / naturalHeight >= 8;
+}
+
 export function LessonContent({ html }: { html: string }) {
   const root = useRef<HTMLDivElement>(null);
   const [images, setImages] = useState<GalleryImage[]>([]);
@@ -24,6 +30,7 @@ export function LessonContent({ html }: { html: string }) {
     }
 
     const all = Array.from(root.current.querySelectorAll("img"))
+      .filter((item) => !isDecorativeBanner(item))
       .map((item) => ({ src: item.currentSrc || item.src, alt: item.alt || "" }))
       .filter((item) => item.src);
 
@@ -75,6 +82,36 @@ export function LessonContent({ html }: { html: string }) {
         block.classList.add("exampleParagraph");
       }
     }
+  }, [html]);
+
+  useEffect(() => {
+    if (!root.current) {
+      return;
+    }
+
+    const pictures = Array.from(root.current.querySelectorAll<HTMLImageElement>("img"));
+    const listeners: Array<{ picture: HTMLImageElement; handler: () => void }> = [];
+    const markDecorative = (picture: HTMLImageElement) => {
+      if (isDecorativeBanner(picture)) {
+        picture.classList.add("decorativeImage");
+      }
+    };
+
+    for (const picture of pictures) {
+      if (picture.complete) {
+        markDecorative(picture);
+      } else {
+        const handler = () => markDecorative(picture);
+        picture.addEventListener("load", handler, { once: true });
+        listeners.push({ picture, handler });
+      }
+    }
+
+    return () => {
+      for (const { picture, handler } of listeners) {
+        picture.removeEventListener("load", handler);
+      }
+    };
   }, [html]);
 
   return (

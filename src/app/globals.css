@@ -91,6 +91,10 @@ a {
   padding: 28px 28px 40px;
 }
 
+.readerPage {
+  padding-top: 14px;
+}
+
 .pageToolbar {
   display: flex;
   justify-content: flex-end;
@@ -104,7 +108,7 @@ a {
   min-height: 40px;
   padding: 0 14px;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 8px;
   background: var(--surface);
   color: var(--text-soft);
   transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
@@ -123,28 +127,48 @@ a {
   box-shadow: 0 0 0 6px var(--accent-soft);
 }
 
+.themeToggle.isCompact {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  min-height: 34px;
+  padding: 0;
+}
+
+.themeToggle.isCompact svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 20px;
-  padding: 26px;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  align-items: center;
+  gap: 28px;
+  padding: 16px 20px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 22px;
+  border-radius: 10px;
   box-shadow: var(--shadow);
 }
 
 .heroBody {
   min-width: 0;
+  padding: 0;
 }
 
 .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 16px;
+  margin-bottom: 6px;
   color: var(--text-faint);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -159,46 +183,76 @@ a {
 
 .hero h1,
 .lessonIntro h1 {
+  flex: 1 1 auto;
   margin: 0;
-  letter-spacing: -0.05em;
-  line-height: 1.02;
-  font-weight: 620;
+  letter-spacing: -0.04em;
+  line-height: 1.06;
+  font-weight: 600;
 }
 
 .hero h1 {
-  max-width: 820px;
-  font-size: clamp(34px, 4.6vw, 64px);
+  max-width: 720px;
+  font-size: clamp(26px, 2.8vw, 38px);
 }
 
 .hero p {
-  max-width: 720px;
-  margin: 16px 0 0;
+  max-width: 620px;
+  margin: 8px 0 0;
   color: var(--text-soft);
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.heroAside {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  gap: 6px;
+}
+
+.heroAsideTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.heroAsideTop .themeToggle {
+  color: var(--text-soft);
 }
 
 .overall {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 18px;
+  justify-content: center;
+  gap: 6px;
+  min-height: 104px;
+  padding: 11px 12px;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 8px;
 }
 
 .overallTop {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .overallTop strong {
-  font-size: 42px;
+  font-size: 24px;
   font-weight: 620;
   letter-spacing: -0.06em;
+}
+
+.overallTop span {
+  font-size: 12px;
 }
 
 .overallTop span,
@@ -209,8 +263,12 @@ a {
 .overallMeta {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  font-size: 14px;
+  gap: 4px 10px;
+  font-size: 12px;
+}
+
+.overallMeta span {
+  padding: 0;
 }
 
 .progress,
@@ -265,7 +323,7 @@ a {
   text-decoration: none;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 10px;
   transition: border-color 0.18s ease, background 0.18s ease;
 }
 
@@ -313,7 +371,7 @@ a {
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: var(--shadow);
 }
 
@@ -323,7 +381,7 @@ a {
   grid-template-columns: 76px minmax(0, 1fr) 160px 28px;
   gap: 18px;
   align-items: center;
-  padding: 20px 22px;
+  padding: 18px 20px;
   cursor: pointer;
 }
 
@@ -346,10 +404,14 @@ a {
 
 .chapterMain h3 {
   margin: 0;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 620;
   letter-spacing: -0.04em;
   line-height: 1.2;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .chapterMain p {
@@ -390,10 +452,10 @@ a {
 }
 
 .section {
-  padding: 18px;
+  padding: 16px;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 8px;
 }
 
 .section h4 {
@@ -451,7 +513,7 @@ a {
   width: 16px;
   height: 16px;
   border: 1px solid var(--border-strong);
-  border-radius: 999px;
+  border-radius: 4px;
   background: transparent;
   transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
@@ -473,34 +535,38 @@ a {
 
 .readerHeader {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  margin-bottom: 20px;
+  justify-content: flex-end;
+  margin: 2px 0 20px;
+  text-align: right;
 }
 
-.readerHeader > div {
+.readerHeaderMain {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   gap: 4px;
-  min-width: 0;
+  max-width: min(100%, 860px);
+  padding: 2px 0;
 }
 
-.readerHeader > div span,
-.topicCounter {
+.readerChapterLabel {
   color: var(--text-faint);
-  font-size: 12px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.readerHeader > div b {
-  font-size: 16px;
-  line-height: 1.4;
-  text-align: center;
+.readerHeaderMain b {
+  min-width: 0;
+  font-size: 19px;
+  line-height: 1.28;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .backLink {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 8px;
   min-height: 40px;
@@ -508,46 +574,130 @@ a {
   text-decoration: none;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 8px;
+}
+
+.backLink svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
 }
 
 .readerGrid {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
   gap: 22px;
+  align-items: start;
 }
 
 .chapterNav {
   position: sticky;
-  top: 20px;
+  top: 14px;
   align-self: start;
-  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - 28px);
+  max-height: calc(100dvh - 28px);
+  min-height: calc(100dvh - 28px);
+  padding: 14px 10px 10px;
+  overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 10px;
   box-shadow: var(--shadow);
 }
 
-.chapterNav p {
-  margin: 0 0 10px;
-  color: var(--text-faint);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+.chapterNavMobile {
+  display: none;
 }
 
-.chapterNav h2 {
-  margin: 0 0 16px;
+.chapterNavTrigger {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 18px;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 14px 16px;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+.chapterNavTriggerMeta {
+  color: var(--text-faint);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.chapterNavTrigger strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 560;
+}
+
+.chapterNavTriggerIcon {
+  align-self: center;
+  justify-self: center;
+  color: var(--text-faint);
   font-size: 20px;
-  line-height: 1.25;
-  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 .chapterNav nav {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
   gap: 6px;
+  height: auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 2px;
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+}
+
+.chapterNav nav::-webkit-scrollbar {
+  display: none;
+}
+
+.chapterNavHeader {
+  flex: none;
+  padding: 0 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.chapterNavHeader span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chapterNavHeader strong {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .chapterNav a {
@@ -557,7 +707,7 @@ a {
   align-items: start;
   padding: 10px 12px;
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: 10px;
   color: var(--text-soft);
   text-decoration: none;
 }
@@ -581,9 +731,24 @@ a {
   margin-bottom: 16px;
 }
 
-.lessonIntro h1 {
+.lessonIntroActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.lessonIntroActions .lessonTools {
   margin-top: 0;
-  font-size: clamp(36px, 4.3vw, 60px);
+}
+
+.lessonIntro h1 {
+  margin: 0;
+  min-width: 0;
+  font-size: clamp(34px, 4vw, 54px);
+  font-weight: 600;
+  line-height: 1.08;
 }
 
 .lessonTools {
@@ -600,7 +765,7 @@ a {
   justify-content: center;
   min-height: 42px;
   padding: 0 16px;
-  border-radius: 999px;
+  border-radius: 8px;
   border: 1px solid var(--border);
   text-decoration: none;
   transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
@@ -628,7 +793,7 @@ a {
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: var(--shadow);
 }
 
@@ -662,13 +827,17 @@ a {
   margin-top: 18px;
 }
 
+.lessonNavigation.isSingle {
+  grid-template-columns: 1fr;
+}
+
 .lessonNavigation a,
 .lessonNavigation span {
   min-height: 96px;
   padding: 16px 18px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 8px;
 }
 
 .lessonNavigation a {
@@ -679,6 +848,10 @@ a {
 }
 
 .lessonNavigation .next {
+  text-align: right;
+}
+
+.lessonNavigation.nextOnly a {
   text-align: right;
 }
 
@@ -696,7 +869,7 @@ a {
   width: 100%;
   max-width: 1320px;
   margin: 0 auto;
-  padding: 36px 38px 48px;
+  padding: 36px 42px 48px;
   font-size: 18px;
   line-height: 1.8;
 }
@@ -726,17 +899,25 @@ a {
 .courseContent h4 {
   margin: 42px 0 14px;
   color: var(--text);
-  font-weight: 620;
+  font-weight: 600 !important;
   letter-spacing: -0.04em;
-  line-height: 1.16;
+  line-height: 1.22;
+}
+
+.courseContent h1 {
+  font-size: 30px !important;
 }
 
 .courseContent h2 {
-  font-size: clamp(28px, 2.8vw, 42px);
+  font-size: 28px !important;
 }
 
 .courseContent h3 {
-  font-size: clamp(22px, 2.1vw, 30px);
+  font-size: 22px !important;
+}
+
+.courseContent h4 {
+  font-size: 18px !important;
 }
 
 .courseContent p,
@@ -797,7 +978,7 @@ a {
   overflow: hidden;
   margin: 24px 0 28px;
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 12px;
   background: var(--surface-2);
 }
 
@@ -832,7 +1013,7 @@ a {
   margin: 24px 0 28px;
   padding: 18px;
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 12px;
   background: #0c0d10;
   color: #d9dde4;
   font-size: 14px;
@@ -849,7 +1030,7 @@ a {
   padding: 18px 20px;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 12px;
 }
 
 .courseContent blockquote,
@@ -914,9 +1095,13 @@ a {
   height: auto;
   margin: 28px auto;
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 10px;
   background: var(--surface-2);
   cursor: zoom-in;
+}
+
+.courseContent img.decorativeImage {
+  display: none !important;
 }
 
 [data-theme="dark"] .courseContent img,
@@ -948,7 +1133,7 @@ a {
   max-width: 100%;
   max-height: calc(100vh - 210px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
+  border-radius: 10px;
   background: #0f1012;
 }
 
@@ -963,7 +1148,7 @@ a {
 .imageThumbs button {
   padding: 0;
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: 8px;
   background: transparent;
   opacity: 0.62;
 }
@@ -977,7 +1162,7 @@ a {
   width: 74px;
   height: 54px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .imageClose,
@@ -1030,6 +1215,98 @@ a {
   font-size: 13px;
 }
 
+.chapterNavOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  display: grid;
+  align-items: end;
+  padding: 12px;
+  background: rgba(8, 9, 11, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.chapterNavSheet {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 14px;
+  max-height: min(76vh, 620px);
+  padding: 16px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.chapterNavSheetHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.chapterNavSheetHeader span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-faint);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chapterNavSheetHeader strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 620;
+  line-height: 1.3;
+}
+
+.chapterNavSheetClose {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.chapterNavSheetList {
+  display: grid;
+  gap: 6px;
+  overflow: auto;
+  min-height: 0;
+  padding-right: 2px;
+  overscroll-behavior: contain;
+}
+
+.chapterNavSheetList a {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 11px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--text-soft);
+  text-decoration: none;
+}
+
+.chapterNavSheetList a span {
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+.chapterNavSheetList a.active {
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--text);
+}
+
 @media (max-width: 1200px) {
   .hero {
     grid-template-columns: 1fr;
@@ -1040,8 +1317,11 @@ a {
   }
 
   .chapterNav {
-    position: relative;
-    top: auto;
+    display: none;
+  }
+
+  .chapterNavMobile {
+    display: block;
   }
 
   .route {
@@ -1070,19 +1350,35 @@ a {
     padding: 16px 14px 28px;
   }
 
+  .readerPage {
+    padding-top: 12px;
+  }
+
   .hero,
   .chapter,
   .chapterNav,
   .lessonReader {
-    border-radius: 18px;
+    border-radius: 10px;
   }
 
   .hero {
-    padding: 20px;
+    gap: 16px;
+    padding: 18px;
   }
 
   .hero h1 {
-    font-size: 34px;
+    font-size: 28px;
+    line-height: 1.06;
+  }
+
+  .hero p {
+    margin-top: 10px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .heroAsideTop {
+    font-size: 10px;
   }
 
   .route {
@@ -1090,25 +1386,69 @@ a {
   }
 
   .readerHeader {
-    flex-wrap: wrap;
-    align-items: flex-start;
+    justify-content: flex-start;
+    margin: 14px 0 16px;
+    text-align: left;
   }
 
-  .readerHeader > div {
+  .readerHeaderMain {
     align-items: flex-start;
+    max-width: 100%;
+    gap: 3px;
   }
 
-  .topicCounter,
-  .readerLabel span:last-child {
+  .readerHeaderMain b {
+    font-size: 17px;
+    line-height: 1.28;
+  }
+
+  .overallTop {
+    align-items: center;
+    gap: 10px;
+  }
+
+  .overallTop strong {
+    font-size: 24px;
+  }
+
+  .overallMeta {
+    gap: 6px;
+  }
+
+  .chapterMain h3 {
+    font-size: 18px;
+    line-height: 1.18;
+  }
+
+  .lessonIntro h1 {
+    font-size: 30px;
+    line-height: 1.1;
+  }
+
+  .lessonIntroActions {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .lessonIntroActions .lessonTools {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .lessonIntroActions .backLink {
+    width: 42px;
+    min-height: 42px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .lessonIntroActions .backLink span {
     display: none;
   }
 
-  .chapterNav nav {
-    overflow: auto;
-  }
-
-  .chapterNav a {
-    min-width: 220px;
+  .readerLabel span:last-child {
+    display: none;
   }
 
   .courseContent {
@@ -1127,6 +1467,15 @@ a {
 
   .imageModal {
     padding: 16px 12px 18px;
+  }
+
+  .chapterNavOverlay {
+    padding: 10px;
+  }
+
+  .chapterNavSheet {
+    max-height: min(82vh, 680px);
+    padding: 14px;
   }
 
   .imageStage > img {
