@@ -10,11 +10,10 @@ const gallery = `<style>#course-lightbox{position:fixed;inset:0;background:rgba(
 
 export function GET(request: NextRequest) {
   const file = request.nextUrl.searchParams.get("file");
-  if (!file || file.includes("..") || !/\.(html|pdf)$/i.test(file)) return new NextResponse("Not found", { status: 404 });
+  if (!file || file.includes("..") || !/\.html$/i.test(file)) return new NextResponse("Not found", { status: 404 });
   const root = path.resolve(process.cwd(), "..");
   const absolute = path.resolve(root, file);
   if (!absolute.startsWith(root) || !fs.existsSync(absolute)) return new NextResponse("Not found", { status: 404 });
-  if (absolute.toLowerCase().endsWith(".pdf")) return new NextResponse(fs.readFileSync(absolute), { headers: { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(path.basename(absolute))}` } });
   const html = fs.readFileSync(absolute, "utf8").replace(/<\/body>/i, `${noVideo}${gallery}</body>`);
   return new NextResponse(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Content-Disposition": "inline" } });
 }

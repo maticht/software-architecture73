@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { LessonTools } from "@/components/course-dashboard";
 import { LessonChapterNav } from "@/components/lesson-chapter-nav";
 import { LessonContent } from "@/components/lesson-content";
-import { getLesson, getLessonContent, getLessonDocumentUrl } from "@/lib/course";
+import { getLesson, getLessonContent } from "@/lib/course";
 
 function href(file: string) {
   return `/lesson/${encodeURIComponent(file)}`;
@@ -18,12 +18,11 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
   }
 
   const { lesson, chapter } = found;
-  const topics = chapter.lessons.filter((item) => item.kind === lesson.kind);
+  const topics = chapter.lessons;
   const currentIndex = topics.findIndex((item) => item.id === lesson.id);
   const previous = topics[currentIndex - 1];
   const next = topics[currentIndex + 1];
-  const content = lesson.kind === "html" ? getLessonContent(lesson.file) : "";
-  const pdfHref = lesson.kind === "pdf" ? getLessonDocumentUrl(lesson.file) : undefined;
+  const content = getLessonContent(lesson.file);
   const navigationClassName = [
     "lessonNavigation",
     previous && next ? "" : "isSingle",
@@ -42,7 +41,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
           <section className="lessonIntro">
             <h1>{lesson.title}</h1>
             <div className="lessonIntroActions">
-              <LessonTools lesson={lesson} pdfHref={pdfHref} />
+              <LessonTools lesson={lesson} />
               <Link href="/" className="backLink">
                 <span>К списку глав</span>
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -59,11 +58,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
               <span>Нажмите на изображение, чтобы открыть его на весь экран</span>
             </div>
 
-            {lesson.kind === "pdf" ? (
-              <iframe title={lesson.title} src={pdfHref} />
-            ) : (
-              <LessonContent html={content} />
-            )}
+            <LessonContent html={content} />
           </section>
 
           {previous || next ? (

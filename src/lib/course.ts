@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
-export type Lesson = { id: string; title: string; file: string; kind: "html" | "pdf" };
+export type Lesson = { id: string; title: string; file: string; kind: "html" };
 export type Section = { title: string; lessons: Lesson[] };
 export type Chapter = { id: string; title: string; sections: Section[]; lessons: Lesson[] };
 
@@ -16,7 +16,6 @@ const THEORY_ROOT_MARKER = '<section class="theory-viewer big-theory lesson__the
 const LARGE_LESSON_THRESHOLD = 20_000_000;
 const ROOT = () => path.resolve(process.cwd(), "data");
 const MEDIA_ROOT = () => path.resolve(process.cwd(), "public", "__course_media");
-const DOCS_ROOT = () => path.resolve(process.cwd(), "public", "__course_docs");
 
 function normalize(value: string) {
   return value.replace(/\\/g, "/");
@@ -29,12 +28,12 @@ function readFiles(folder: string): string[] {
       return readFiles(full);
     }
 
-    return /\.(html|pdf)$/i.test(entry.name) ? [full] : [];
+    return /\.html$/i.test(entry.name) ? [full] : [];
   });
 }
 
 function lessonTitle(filename: string) {
-  return filename.replace(/\.(html|pdf)$/i, "").replace(/^\d+(?:\.\d+)*\s*/, "");
+  return filename.replace(/\.html$/i, "").replace(/^\d+(?:\.\d+)*\s*/, "");
 }
 
 function sourceFor(file: string) {
@@ -192,29 +191,6 @@ function mediaSource(src: string) {
   }
 
   return `/__course_media/${filename}`;
-}
-
-function documentSource(file: string) {
-  if (!file.endsWith(".pdf") || file.includes("..")) {
-    return "";
-  }
-
-  const absolute = path.resolve(ROOT(), file);
-
-  if (!absolute.startsWith(ROOT()) || !fs.existsSync(absolute)) {
-    return "";
-  }
-
-  const hash = crypto.createHash("sha1").update(file).digest("hex");
-  const filename = `${hash}${path.extname(absolute).toLowerCase() || ".pdf"}`;
-  const target = path.join(DOCS_ROOT(), filename);
-
-  if (!fs.existsSync(target)) {
-    fs.mkdirSync(DOCS_ROOT(), { recursive: true });
-    fs.copyFileSync(absolute, target);
-  }
-
-  return `/__course_docs/${filename}`;
 }
 
 function firstImageTag(html: string) {
@@ -422,12 +398,8 @@ export function getCourse(): Chapter[] {
             id: relative,
             title: lessonTitle(path.basename(file)),
             file: relative,
-            kind: file.endsWith(".pdf") ? "pdf" : "html",
+            kind: "html",
           };
-
-          if (lesson.kind === "pdf") {
-            documentSource(relative);
-          }
 
           grouped.set(section, [...(grouped.get(section) ?? []), lesson]);
         });
@@ -490,8 +462,4 @@ export function getLessonContent(file: string) {
   }
 
   return withoutLeadingLessonTitle(cleanLessonHtml(rootHtml), file);
-}
-
-export function getLessonDocumentUrl(file: string) {
-  return documentSource(file);
 }

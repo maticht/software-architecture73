@@ -812,14 +812,6 @@ a {
   font-weight: 600;
 }
 
-.lessonReader iframe {
-  display: block;
-  width: 100%;
-  min-height: 760px;
-  border: 0;
-  background: var(--surface);
-}
-
 .lessonNavigation {
   display: grid;
   grid-template-columns: 1fr 1fr;

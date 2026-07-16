@@ -48,7 +48,7 @@ function LessonLine({ lesson, done, toggle }: { lesson: Lesson; done: boolean; t
 
       <Link href={linkTo(lesson.file)} className="lessonLink">
         <span className="lessonTitle">{lesson.title}</span>
-        <span className="fileType">{lesson.kind === "pdf" ? "PDF" : "Урок"}</span>
+        <span className="fileType">Урок</span>
       </Link>
     </div>
   );
@@ -57,7 +57,7 @@ function LessonLine({ lesson, done, toggle }: { lesson: Lesson; done: boolean; t
 export function CourseDashboard({ chapters }: { chapters: Chapter[] }) {
   const { done, toggle } = useProgress();
   const lessons = useMemo(
-    () => chapters.flatMap((chapter) => chapter.lessons).filter((lesson) => lesson.kind === "html"),
+    () => chapters.flatMap((chapter) => chapter.lessons),
     [chapters],
   );
 
@@ -109,7 +109,7 @@ export function CourseDashboard({ chapters }: { chapters: Chapter[] }) {
 
         <div className="chapterList">
           {chapters.map((chapter, index) => {
-            const current = chapter.lessons.filter((lesson) => lesson.kind === "html");
+            const current = chapter.lessons;
             const count = current.filter((lesson) => done.includes(lesson.id)).length;
             const percentage = current.length ? Math.round((count / current.length) * 100) : 0;
 
@@ -162,7 +162,7 @@ export function CourseDashboard({ chapters }: { chapters: Chapter[] }) {
   );
 }
 
-export function LessonTools({ lesson, pdfHref }: { lesson: Lesson; pdfHref?: string }) {
+export function LessonTools({ lesson }: { lesson: Lesson }) {
   const { done, toggle } = useProgress();
   const isDone = done.includes(lesson.id);
 
@@ -172,11 +172,6 @@ export function LessonTools({ lesson, pdfHref }: { lesson: Lesson; pdfHref?: str
         {isDone ? "Урок отмечен как пройденный" : "Отметить как пройденный"}
       </button>
 
-      {lesson.kind === "pdf" && pdfHref ? (
-        <a className="secondaryButton" href={pdfHref} download>
-          Скачать PDF
-        </a>
-      ) : null}
     </div>
   );
 }
