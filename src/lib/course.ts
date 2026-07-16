@@ -190,15 +190,37 @@ function firstImageTag(html: string) {
   if (tagEnd < 0) {
     return null;
   }
+  const srcIndex = html.indexOf('src="', imageIndex);
 
-  const tag = html.slice(imageIndex, Math.min(tagEnd + 1, imageIndex + 8192));
-  const src = tag.match(/\ssrc="([^"]+)"/i)?.[1];
+  if (srcIndex < 0 || srcIndex > tagEnd) {
+    return null;
+  }
+
+  const srcStart = srcIndex + 5;
+  const srcEnd = html.indexOf('"', srcStart);
+
+  if (srcEnd < 0 || srcEnd > tagEnd) {
+    return null;
+  }
+
+  const src = html.slice(srcStart, srcEnd);
 
   if (!src) {
     return null;
   }
 
-  const alt = tag.match(/\salt="([^"]*)"/i)?.[1] ?? "";
+  const altIndex = html.indexOf('alt="', imageIndex);
+  let alt = "";
+
+  if (altIndex >= 0 && altIndex < tagEnd) {
+    const altStart = altIndex + 5;
+    const altEnd = html.indexOf('"', altStart);
+
+    if (altEnd >= 0 && altEnd <= tagEnd) {
+      alt = html.slice(altStart, altEnd);
+    }
+  }
+
   return { src, alt };
 }
 
@@ -209,8 +231,19 @@ function imageFromStyle(html: string) {
     return null;
   }
 
-  const snippet = html.slice(styleIndex, styleIndex + 16384);
-  return snippet.match(/background-image:\s*url\((?:&quot;|")?(data:image\/[^)"']+)(?:&quot;|")?\)/i)?.[1] ?? null;
+  const dataIndex = html.indexOf("data:image/", styleIndex);
+
+  if (dataIndex < 0) {
+    return null;
+  }
+
+  const endIndex = html.indexOf(")", dataIndex);
+
+  if (endIndex < 0) {
+    return null;
+  }
+
+  return html.slice(dataIndex, endIndex).replace(/&quot;|"/g, "").trim();
 }
 
 function normalizeImageMarkup(src: string, alt = "") {
