@@ -179,14 +179,38 @@ function mediaSource(src: string) {
 }
 
 function firstImageTag(html: string) {
-  return (
-    html.match(/<img\b[^>]*src="([^"]+)"[^>]*alt="([^"]*)"[^>]*>/i) ??
-    html.match(/<img\b[^>]*src="([^"]+)"[^>]*>/i)
-  );
+  const imageIndex = html.indexOf("<img");
+
+  if (imageIndex < 0) {
+    return null;
+  }
+
+  const tagEnd = html.indexOf(">", imageIndex);
+
+  if (tagEnd < 0) {
+    return null;
+  }
+
+  const tag = html.slice(imageIndex, Math.min(tagEnd + 1, imageIndex + 8192));
+  const src = tag.match(/\ssrc="([^"]+)"/i)?.[1];
+
+  if (!src) {
+    return null;
+  }
+
+  const alt = tag.match(/\salt="([^"]*)"/i)?.[1] ?? "";
+  return { src, alt };
 }
 
 function imageFromStyle(html: string) {
-  return html.match(/background-image:\s*url\((?:&quot;|")?(data:image\/[^)"']+)(?:&quot;|")?\)/i);
+  const styleIndex = html.indexOf("background-image");
+
+  if (styleIndex < 0) {
+    return null;
+  }
+
+  const snippet = html.slice(styleIndex, styleIndex + 16384);
+  return snippet.match(/background-image:\s*url\((?:&quot;|")?(data:image\/[^)"']+)(?:&quot;|")?\)/i)?.[1] ?? null;
 }
 
 function normalizeImageMarkup(src: string, alt = "") {
@@ -202,8 +226,8 @@ function simplifyMediaBlocks(html: string) {
     (block) => {
       const styleMatch = imageFromStyle(block.html);
       const imageMatch = firstImageTag(block.html);
-      const src = styleMatch?.[1] ?? imageMatch?.[1];
-      const alt = imageMatch?.[2] ?? "";
+      const src = styleMatch ?? imageMatch?.src;
+      const alt = imageMatch?.alt ?? "";
       return src ? normalizeImageMarkup(src, alt) : "";
     },
   );
@@ -213,7 +237,7 @@ function simplifyMediaBlocks(html: string) {
     (classes) => classes.includes("downloadable-image"),
     (block) => {
       const imageMatch = firstImageTag(block.html);
-      return imageMatch ? normalizeImageMarkup(imageMatch[1], imageMatch[2] ?? "") : "";
+      return imageMatch ? normalizeImageMarkup(imageMatch.src, imageMatch.alt) : "";
     },
   );
 
